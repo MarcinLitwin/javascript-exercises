@@ -1,11 +1,30 @@
 const palindromes = function (word) {
-    let placesOfPunctation = getPunctationPlaces(word);
-    return (
-        placesOfPunctation +
-        word +
-        getSentenceWithoutPunctation(word, placesOfPunctation)
+    let sentenceWithoutSpaces = deleteSpacesFromSentence(word);
+    let punctationPlaces = getPunctationPlaces(sentenceWithoutSpaces);
+    let sentenceWitoutPunctation = getSentenceWithoutPunctation(
+        sentenceWithoutSpaces,
+        punctationPlaces
     );
+    let joinedTogether = sentenceWitoutPunctation.join('');
+    let sentenceWithoutPunctationAndSpaces =
+        deleteSpacesFromSentence(joinedTogether);
+    let lowerEditedSentence =
+        sentenceWithoutPunctationAndSpaces.toLocaleLowerCase();
+    return compareWordBackwardAndNormal(lowerEditedSentence);
 };
+
+function deleteSpacesFromSentence(sentence) {
+    const wordArray = [];
+    for (i = 0; i < sentence.length; i++) {
+        if (sentence.charAt(i) != ' ') {
+            wordArray.push(sentence.charAt(i));
+        } else {
+            continue;
+        }
+    }
+    let outputSentence = wordArray.join('');
+    return outputSentence;
+}
 
 //Function to delete punctation from given word based on given punctation places array
 
@@ -18,10 +37,8 @@ function getSentenceWithoutPunctation(word, arrayOfPunctation) {
     }
     // wordArray is our array with letters from sentence
     // now we need to delete from this array punctation from places we get from arrayOfPunctation
-
     for (n = 0; n < arrayOfPunctation.length; n++) {
-        let placeToDelete = arrayOfPunctation[n];
-        wordArray.splice(placeToDelete, 1);
+        wordArray.splice(arrayOfPunctation[n], 1, ' ');
     }
     return wordArray;
 }
